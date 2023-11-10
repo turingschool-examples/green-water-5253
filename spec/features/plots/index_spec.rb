@@ -16,7 +16,7 @@ RSpec.describe Plot, type: :feature do
     
     PlotPlant.create!(plot: @plot1, plant: @plant1)
     PlotPlant.create!(plot: @plot1, plant: @plant2)
-    PlotPlant.create!(plot: @plot2, plant: @plant3)
+    PlotPlant.create!(plot: @plot2, plant: @plant1)
     PlotPlant.create!(plot: @plot2, plant: @plant4)
     PlotPlant.create!(plot: @plot3, plant: @plant5)
     PlotPlant.create!(plot: @plot3, plant: @plant6)
@@ -30,11 +30,26 @@ RSpec.describe Plot, type: :feature do
       within("#plot-#{plot.number}") do
         expect(page).to have_content("Plot Number: #{plot.number}")
         plot.plants.each do |plant|
-          expect(page).to have_content(plant.name)
+          expect(page).to have_content("Plant Name: #{plant.name}")
         end
       end
     end
   end
 
+  # US 2
+  it "displays a link next to each plants name that will remove the plant from the plot" do
+    visit plots_path
 
+    within("#plot-#{@plot1.number}") do
+      expect(page).to have_content("Plant Name: #{@plant1.name}")
+      expect(page).to have_link("Remove #{@plant1.name}")
+      click_link("Remove #{@plant1.name}")
+      expect(page).to_not have_content("Plant Name: #{@plant1.name}")
+    end
+
+    within("#plot-#{@plot2.number}") do
+      expect(page).to have_content("Plant Name: #{@plant1.name}")
+      expect(page).to have_link("Remove #{@plant1.name}")
+    end
+  end
 end
