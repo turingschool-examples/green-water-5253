@@ -1,0 +1,11 @@
+<h1>Plots Index Page</h1>
+<br>
+<p><% @plots.each do |plot| %></p>
+  <section id="plot-<%= plot.number %>"></p>
+    <p>Plot Number: <%= plot.number %>
+    <% plot.plants.each do |plant| %>
+      <p>Plant Name: <%= plant.name %></p>
+      <p><%= link_to "Remove #{plant.name}", plot_plant_path(plot.id, plant.id), method: :delete %></p>
+    <% end %>
+  </section>
+<% end %>

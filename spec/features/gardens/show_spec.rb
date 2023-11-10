@@ -1,6 +1,6 @@
-require "rails_helper"
+require 'rails_helper'
 
-RSpec.describe Garden, type: :model do
+RSpec.describe "Garden's Show Page", type: :feature do
   before :each do
     @garden = Garden.create!(name: "Garden of Eden", organic: true)
     @plot1 = @garden.plots.create!(number: 1, size: 'Medium', direction: 'West')
@@ -25,20 +25,11 @@ RSpec.describe Garden, type: :model do
     PlotPlant.create!(plot: @plot3, plant: @plant6)
   end
 
-  describe 'relationships' do
-    it { should have_many(:plots) }
-  end
+  # US 3
+  it "displays a unique list of plants within the garden plots that take less than 100 days to harvest" do
+    visit garden_path(@garden.id)
 
-  describe "validations" do
-    it { should validate_presence_of(:name)}
-    it { should validate_presence_of(:organic)}
+    expect(page).to have_content("#{@garden.name} Show Page")
+    expect(page).to have_content("Unique Plants that take less than 100 days to harvest: Raspberry Bush, Strawberry Bush")
   end
-
-  describe "instance methods" do
-    describe "#unique_list_under_100" do
-      it "returns a unique list of plants that harvest in less than 100 days" do
-        expect(@garden.unique_list_under_100).to eq([@plant1.name, @plant3.name])
-      end
-    end
-  end 
 end
